@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,11 +13,10 @@ import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SearchField from 'react-search-field';
-
+import SortByAlphaIcon from '@material-ui/icons/SortByAlpha';
+import GradeIcon from '@material-ui/icons/Grade';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -79,11 +80,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-//  const onChange = (e) => {
-//     console.log(e);
-//  }
-
-export function Navbar({ onChange}) {
+export function Navbar({ onChange, SortByAlphabet , SortByMarks}) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -108,62 +105,62 @@ export function Navbar({ onChange}) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
+   const menuId = 'primary-search-account-menu';
+  // const renderMenu = (
+  //   <Menu
+  //     anchorEl={anchorEl}
+  //     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+  //     id={menuId}
+  //     keepMounted
+  //     transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+  //     open={isMenuOpen}
+  //     onClose={handleMenuClose}
+  //   >
+  //     <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+  //     <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+  //   </Menu>
+  // );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+   const mobileMenuId = 'primary-search-account-menu-mobile';
+  // const renderMobileMenu = (
+  //   <Menu
+  //     anchorEl={mobileMoreAnchorEl}
+  //     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+  //     id={mobileMenuId}
+  //     keepMounted
+  //     transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+  //     open={isMobileMenuOpen}
+  //     onClose={handleMobileMenuClose}
+  //   >
+  //     <MenuItem>
+  //       <IconButton aria-label="show 4 new mails" color="inherit">
+  //         <Badge badgeContent={4} color="secondary">
+  //           <MailIcon />
+  //         </Badge>
+  //       </IconButton>
+  //       <p>Messages</p>
+  //     </MenuItem>
+  //     <MenuItem>
+  //       <IconButton aria-label="show 11 new notifications" color="inherit">
+  //         <Badge badgeContent={11} color="secondary">
+  //           <NotificationsIcon />
+  //         </Badge>
+  //       </IconButton>
+  //       <p>Notifications</p>
+  //     </MenuItem>
+  //     <MenuItem onClick={handleProfileMenuOpen}>
+  //       <IconButton
+  //         aria-label="account of current user"
+  //         aria-controls="primary-search-account-menu"
+  //         aria-haspopup="true"
+  //         color="inherit"
+  //       >
+  //         <AccountCircle />
+  //       </IconButton>
+  //       <p>Profile</p>
+  //     </MenuItem>
+  //   </Menu>
+  // );
 
   return (
     <div className={classes.grow}>
@@ -192,6 +189,7 @@ export function Navbar({ onChange}) {
                 input: classes.inputInput,
               }}
             />
+            
             {/* <InputBase
               placeholder="Search…"
               classes={{
@@ -201,6 +199,27 @@ export function Navbar({ onChange}) {
               inputProps={{ 'aria-label': 'search' }}
             /> */}
           </div>
+          <IconButton
+            edge="end"
+            // aria-label="Sort alphabetically"
+            // aria-controls={menuId}
+            // aria-haspopup="true"
+            onClick={SortByAlphabet}
+            color="inherit"
+          >
+            <SortByAlphaIcon />
+          </IconButton>
+
+          <IconButton
+            edge="end"
+            aria-label="Sort by marks"
+            aria-controls={menuId}
+            aria-haspopup="true"
+            onClick={SortByMarks}
+            color="inherit"
+          >
+            <GradeIcon />
+          </IconButton>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {/* <IconButton aria-label="show 4 new mails" color="inherit">
@@ -213,6 +232,7 @@ export function Navbar({ onChange}) {
                 <NotificationsIcon />
               </Badge>
             </IconButton> */}
+            
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -224,6 +244,9 @@ export function Navbar({ onChange}) {
               <AccountCircle />
             </IconButton>
           </div>
+          
+          <Link to="/login"><p style={{ "fontSize": "14px", "textAlign": "center", "color":"white","padding":"10px", "margin":"0" }}>Logout</p></Link>
+         
           <div className={classes.sectionMobile}>
             <IconButton
               aria-label="show more"
@@ -237,8 +260,8 @@ export function Navbar({ onChange}) {
           </div>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+      {/* {renderMobileMenu} */}
+      {/* {renderMenu} */}
     </div>
   );
 }

@@ -16,6 +16,7 @@ import { Navbar } from '../_components/Navbar';
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
+        padding:30
     },
     paper: {
         padding: theme.spacing(2),
@@ -56,7 +57,45 @@ const useStyles = makeStyles(theme => ({
     var len = search.length;
     var students = len = 0 ? Object.values(studentData) : Object.values(studentData).filter(student => (student["name"].toUpperCase().indexOf(search) > -1));
     
-    // console.log('studentSearch', students);
+    if(sortByAlph == 'asc')
+     students.sort(function (a, b) {
+         var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
+         if (nameA < nameB) //sort string ascending
+             return -1
+         if (nameA > nameB)
+             return 1
+         return 0 //default return value (no sorting)
+     });
+    else if (sortByAlph == 'desc')
+        students.sort(function (a, b) {
+            var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
+            if (nameA < nameB) //sort string desc
+                return 1
+            if (nameA > nameB)
+                return -1
+            return 0 //default return value (no sorting)
+        });
+
+
+     if(sortByMarks)
+         students.sort(function (a, b) {
+             var totalMarksA = 0, totalMarksB =0;
+             Object.values(a['marks']).map(val => {
+                 console.log(val);
+                 totalMarksA += val;
+             });
+             console.log('totalMarksA', totalMarksA);
+
+             Object.values(b['marks']).map(val => {
+                 console.log(val);
+                 totalMarksB += val;
+             });
+             console.log('totalMarksB', totalMarksB)
+
+             return -(totalMarksA - totalMarksB)
+         })
+
+    //  console.log('studentSearch', students);
         
     var studentInfo = students.map((student, index) => {
             var name = student["name"];  
@@ -86,8 +125,8 @@ const useStyles = makeStyles(theme => ({
                                         subheader={<h5>Roll : {rollNo}</h5>}
                                 ></CardHeader>
                     <CardContent className={classes.content}>
-                        <div style={{"border":"1px solid red","borderRadius":"5%","width":"90%"}}>
-                            <div className={classes.title} style={{ "padding": "5px", "backgroundColor": "red", "color": "black" }}>Total Marks</div>
+                        <div style={{"border":"1px solid red","borderRadius":"5%","width":"70%",'margin':"auto"}}>
+                            <div className={classes.title} style={{ "padding": "5px", "backgroundColor": "#ef5350", "color": "black" }}>Total Marks</div>
                             <div><h4>{totalMarks + " "}</h4></div>
                         </div>
                     
@@ -119,22 +158,40 @@ class Dashboard extends React.Component {
             isLoaded: false,
             error: null,
             search:'',
-            sortByAlph:false,
-            sortByMarks:false
+            sortByAlph: '',
+            sortByMarks: false
         }
 
         // this.onChange = this.onChange.bind(this);
     }
     onChange(search) {
         // Declare variables
-        console.log(search);
+        // console.log(search);
         var input, filter, ul, li, a, i, txtValue;
         var filterSearch = search.toUpperCase();
         this.setState({
             search: filterSearch
         })
-        console.log('filterSearch', this.state.search);
+        // console.log('filterSearch', this.state.search);
     }
+
+
+    sortByAlphabet(){
+
+        var alphAsc = this.state.sortByAlph;
+        alphAsc == '' ? this.setState({ sortByAlph: 'asc' }) : alphAsc == "asc" ? this.setState({ sortByAlph: 'desc' }) : this.setState({ sortByAlph: 'asc' })
+        // console.log("alph",this.state.sortByAlph);
+
+    }
+
+    sortByMark() {
+        var mark = this.state.sortByMarks;
+        this.setState({ sortByMarks: !mark })
+        console.log("marks", this.state.sortByMarks);
+
+    }
+
+
     componentDidMount() {
         fetch("https://api.myjson.com/bins/1dlper")
             .then(res => res.json())
@@ -162,14 +219,14 @@ class Dashboard extends React.Component {
     render() {
         const { user, users } = this.props;
         const { studentData, isLoaded, search, sortByAlph, sortByMarks } = this.state;
-        console.log('search',search);
-
-        return <><Navbar onChange = {(search) => this.onChange(search)}/>
-            <div className="col-md-11 col-md-offset-1">
-                <h1>Hi {user.firstName}!</h1>
-                <p>You're logged in to the University portal!</p>
+        // console.log('search',search);
+        return <>{isLoaded && <Navbar onChange = {(search) => this.onChange(search)} SortByAlphabet={() => this.sortByAlphabet()}  SortByMarks={() => this.sortByMark()}/>}
+            <div className="col-md-11 ">
+                <h2>Welcome {user.firstName} !</h2>
+                {!isLoaded && <h3>You are now logged in to the University portal!</h3>}
                
-               {!isLoaded &&  <em>Loading student data...</em>}
+                {!isLoaded &&  <em>Loading student data...</em>}
+                {isLoaded && <h3 align="center" style={{  "textDecoration":"underline" }}>Student Details</h3>}
                 {isLoaded && <StudentGrid studentData={studentData} search={search} sortByAlph={sortByAlph} sortByMarks={sortByMarks}  ></StudentGrid>}
 
                 {/* <h3>All registered users:</h3>
@@ -189,9 +246,6 @@ class Dashboard extends React.Component {
                         )}
                     </ul>
                 } */}
-                <p>
-                    <Link to="/login">Logout</Link>
-                </p>
             </div>
             </>
     }
